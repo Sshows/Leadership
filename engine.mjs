@@ -32,7 +32,7 @@ export function submit(s, correct, selection=null) {
   const next={...s,pending:[...s.pending],first:{...s.first},history:[...s.history,{id:c.id,correct,kind:c.kind,attempt:c.attempt}],current:{...c,selected:selection??(correct?'remember':'repeat'),correct}};
   if(c.kind==='first') next.first[c.id]=correct;
   if(c.kind==='retry'&&correct) next.retrySuccess++;
-  if(!correct&&c.kind!=='filler'&&c.attempt<2&&s.ids.length>1) next.pending.push({id:c.id,kind:'retry',attempt:c.attempt+1});
+  if(!correct&&c.kind!=='filler'&&c.attempt<2&&s.ids.length>1) next.pending.splice(Math.min(2,next.pending.length),0,{id:c.id,kind:'retry',attempt:c.attempt+1});
   return next;
 }
 export function score(s) { const v=Object.values(s.first);return {correct:v.filter(Boolean).length,total:v.length,goal:s.ids.length,retrySuccess:s.retrySuccess}; }
